@@ -1,18 +1,37 @@
 import webapp2
 import json
 import logging
+import datetime
 
 from google.appengine.ext import db
 from google.appengine.api import users
 from google.appengine.api import memcache
 
+
 class Link(db.Model):
     url = db.LinkProperty()
     user = db.UserProperty()
+    dateInsert = db.DateTimeProperty(auto_now_add=True)
+
+
+def dbLinkToStoredObject(link):
+    return {"url" : link.url, "id": str(link.key()), "dateInsert" : link.dateInsert}
 
 
 def get_memcache_key(user):
     return 'user_list_' + user.user_id()
+
+
+def toJson(object):
+    class JsonEncoder(json.JSONEncoder):
+        monthNames = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
+
+        def default(self, obj):
+            if isinstance(obj, datetime.datetime):
+                # TODO: need to handle timezones here!!
+                return "%d:%d - %d %s %d" % (obj.hour, obj.minute, obj.day, self.monthNames[obj.month], obj.year)
+            return json.JSONEncoder.default(self, obj)
+    return json.dumps(object, cls=JsonEncoder)
 
 
 class List(webapp2.RequestHandler):
@@ -32,11 +51,11 @@ class List(webapp2.RequestHandler):
                                 'WHERE user = :1',
                                 user)
             for link in links:
-                urls.append({"url" : link.url, "id" : str(link.key())})
+                urls.append(dbLinkToStoredObject(link))
             if not memcache.add(get_memcache_key(user), urls, 360):
                 logging.error('Memcache set failed!')
 
-        respJSON = json.dumps(urls)
+        respJSON = toJson(urls)
         self.response.out.write(respJSON)
 
 
@@ -56,12 +75,12 @@ class Add(webapp2.RequestHandler):
         memcache_key = get_memcache_key(user)
         urls = memcache.get(memcache_key)
         if urls is not None:
-            urls.append({"url" : link.url, "id" : str(link.key())})
+            urls.append(dbLinkToStoredObject(link))
             if not memcache.replace(memcache_key, urls, 360):
                 logging.error('Memcache set failed!')
                 memcache.delete(memcache_key)
 
-        respJSON = json.dumps( {'ok': True, 'id': str(link.key())} )
+        respJSON = toJson( {'ok': True, 'id': str(link.key())} )
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(respJSON)
 

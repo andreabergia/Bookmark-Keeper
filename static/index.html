@@ -114,7 +114,7 @@ function getDisplayLink(link) {
 }
 
 // Append a row to the table (TODO: performances!)
-function appendRow(link, elemId) {
+function appendRow(link, elemId, dateInsert) {
   var rowId = 'row' + elemId;
 
   $('table#links').find('tbody').append(
@@ -149,6 +149,8 @@ function appendRow(link, elemId) {
             .attr('target', 'blank')
             .text(getDisplayLink(link))
         )
+      ).append(
+        $('<td>').text(dateInsert)
       )
     );
 }
@@ -177,7 +179,7 @@ $(document).ready(function() {
     success : function(links) {
       $.each(links, function(index) {
         var link = links[index];
-        appendRow(link['url'], link['id']);
+        appendRow(link['url'], link['id'], link['dateInsert']);
       })
     }
   });
@@ -220,7 +222,7 @@ $(document).ready(function() {
           return;
         }
 
-        appendRow(linkUrl, result['id']);
+        appendRow(linkUrl, result['id'], 'Now')
 
         $url.val('');
         $url.removeAttr('disabled');
