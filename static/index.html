@@ -134,7 +134,7 @@ function appendRow(link, elemId) {
             data : { id: elemId },
             // TODO: id
             success: function(data) {
-              showInfo('Link <a href="' + link + '">' + link + '</a> successfully removed.');
+              showInfo('Link <a target="blank" href="' + link + '">' + link + '</a> successfully removed.');
               tr.remove();
             },
             error: function(xhr, textStatus, errorThrown) {
@@ -146,6 +146,7 @@ function appendRow(link, elemId) {
         $('<td>').append(
           $('<a>')
             .attr('href', link)
+            .attr('target', 'blank')
             .text(getDisplayLink(link))
         )
       )
@@ -225,7 +226,7 @@ $(document).ready(function() {
         $url.removeAttr('disabled');
         enableOrDisableSubmit();
 
-        showInfo('Link <a href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
+        showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
       },
       error: function(xhr, textStatus, errorThrown) {
         showError('Could not add the link! Please try again later');
