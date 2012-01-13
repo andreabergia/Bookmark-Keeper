@@ -21,6 +21,9 @@
     .hidden {
       display: none
     }
+    .hero-unit a {
+      text-decoration: none;
+    }
     </style>
 
     <!-- Le fav and touch icons -->
@@ -35,7 +38,10 @@
 
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <h1>Bookmarker!</h1>
+        <a href="/">
+          <img src="images/icon.png" style="float: left;" height="55">
+          <h1>Bookmarker!</h1>
+        </a>
         <p>Bookmarker is a simple web application for storing bookmarks and links to read later.</p>
 
         <form>
@@ -146,6 +152,20 @@ function appendRow(link, elemId) {
     );
 }
 
+function enableOrDisableSubmit() {
+    var $submit = $('button#submit');
+    var $urlField = $('input#url');
+
+    var currentLength = $urlField.val().length;
+    if (currentLength > 0) {
+      $submit.removeAttr('disabled');
+      $submit.removeClass('disabled');
+    } else {
+      $submit.attr('disabled');
+      $submit.addClass('disabled');
+    }
+}
+
 $(document).ready(function() {
   // Parse starting URLs
   $.ajax({
@@ -162,19 +182,7 @@ $(document).ready(function() {
   });
 
   // Enable - disable the "submit" button in accord with the length of the url field's content
-  var $submit = $('button#submit');
-  $('input#url').bind('keydown keyup', function(event) {
-    var $this = $(this);
-    var currentLength = $this.val().length;
-
-    if (currentLength > 0) {
-      $submit.removeAttr('disabled');
-      $submit.removeClass('disabled');
-    } else {
-      $submit.attr('disabled');
-      $submit.addClass('disabled');
-    }
-  });
+  $('input#url').bind('keydown keyup', enableOrDisableSubmit);
 
   // Setup error message
   $('#errorMessage .close').click(function(event) {
@@ -215,6 +223,7 @@ $(document).ready(function() {
 
         $url.val('');
         $url.removeAttr('disabled');
+        enableOrDisableSubmit();
 
         showInfo('Link <a href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
       },
