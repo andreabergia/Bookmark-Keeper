@@ -19,10 +19,14 @@ handlers:
   upload: static/index.html
   login: required
 
-- url: /.*
-  script: bookmarker.app
-  login: required
+- url: /images/favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
 
 - url: /favicon.ico
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
+
+- url: /.*
+  script: bookmarker.app
+  login: required
