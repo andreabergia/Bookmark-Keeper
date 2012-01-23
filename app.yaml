@@ -19,6 +19,11 @@ handlers:
   upload: static/index.html
   login: required
 
+- url: /links/
+  static_files: static/list.html
+  upload: static/list.html
+  login: required
+
 - url: /images/favicon.ico
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
