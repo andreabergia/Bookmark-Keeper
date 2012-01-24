@@ -28,7 +28,8 @@ def getLinks(user):
         urls = []
         links = db.GqlQuery('SELECT * '
                             'FROM Link '
-                            'WHERE user = :1',
+                            'WHERE user = :1 '
+                            'ORDER BY dateInsert DESC',
                             user)
         for link in links:
             urls.append(dbLinkToStoredObject(link))
