@@ -5,6 +5,9 @@ from google.appengine.ext.webapp import template
 register = template.create_template_register()
 
 def formatDateDistance(d):
+    if d is None:
+        return "Some time ago"
+
     d2 = datetime.datetime.today()
     dist = d2 - d
     distInSeconds = dist.total_seconds()
