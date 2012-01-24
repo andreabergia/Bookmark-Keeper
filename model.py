@@ -58,9 +58,9 @@ def addLinkForUser(user, url):
 
     return link
 
-def delLinkForUser(user, linkId):
+def delLinkForUser(user, linkKey):
     assert user is not None, 'User is none!'
-    assert linkId is not None, 'linkId is none!'
+    assert linkKey is not None, 'linkKey is none!'
 
     link = Link.get(linkKey)
     if link:

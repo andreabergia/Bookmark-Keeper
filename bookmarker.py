@@ -10,15 +10,17 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 
 
+def toJson(object):
+    class JsonEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, datetime.datetime):
+                return formatDateDistance(obj)
+            return json.JSONEncoder.default(self, obj)
+    return json.dumps(object, cls=JsonEncoder)
+
+
 class List(webapp2.RequestHandler):
     def get(self):
-        def toJson(object):
-            class JsonEncoder(json.JSONEncoder):
-                def default(self, obj):
-                    if isinstance(obj, datetime.datetime):
-                        return formatDateDistance(obj)
-                    return json.JSONEncoder.default(self, obj)
-            return json.dumps(object, cls=JsonEncoder)
 
         user = users.get_current_user()
         assert user is not None, 'no current user!'
@@ -35,7 +37,7 @@ class Add(webapp2.RequestHandler):
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 
-        link = model.addLinkForUser(user, request.get('url'))
+        link = model.addLinkForUser(user, self.request.get('url'))
 
         respJSON = toJson( {'ok': True, 'id': str(link.key())} )
         self.response.headers['Content-Type'] = 'application/json'
@@ -48,12 +50,11 @@ class Remove(webapp2.RequestHandler):
         assert user is not None, 'no current user!'
 
         linkKey = self.request.get('id')
-        if model.delLinkForUser(user, linkKey):
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write('{"ok" : true}')
-        else:
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write('{"ok" : false}')
+        success = model.delLinkForUser(user, linkKey)
+
+        respJSON = toJson( {'ok': success} )
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(respJSON)
 
 class Links(webapp2.RequestHandler):
     def get(self):
