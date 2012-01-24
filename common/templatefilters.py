@@ -24,7 +24,9 @@ def formatDateDistance(d):
         yearsDiff = int(distInSeconds / (86400 * 365))
         monthsDiff = int((distInSeconds - yearsDiff * 86400 * 365) / (86400 * 30))
         if yearsDiff > 0:
-            when = "About %d years %d months ago" % (yearsDiff, monthsDiff)
+            # Disabled until the JavaScript can parse this:
+            # when = "About %d years %d months ago" % (yearsDiff, monthsDiff)
+            when = "About %d years ago" % (yearsDiff, )
         else:
             when = "About %d months ago" % (monthsDiff, )
     return when

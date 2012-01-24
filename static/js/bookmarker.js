@@ -94,6 +94,36 @@ function enableOrDisableSubmit() {
     }
 }
 
+// Add table sorting parser
+$.tablesorter.addParser({
+  id: 'timestamp', // Set a unique id
+  is: function(s) { // Return false so this parser is not auto detected
+      return false;
+  },
+  format: function(s) {
+      // format your data for normalization
+      if (s == 'Now' || s == 'Some time ago') {
+        return 0;
+      }
+
+      s = s.toLowerCase().replace(/about /, '').replace(/ ago/, '');
+      var d = s.match(/\d+/);
+      if (s.match(/minutes/)) {
+        return d * 60;
+      } else if (s.match(/hours/)) {
+        return d * 3600;
+      } else if (s.match(/days/)) {
+        return d * 86400;
+      } else if (s.match(/months/)) {
+        return d * 86400 * 30;
+      } else {
+        return d * 86400 * 365;
+      }
+  },
+  type: 'numeric'
+});
+
+
 $(document).ready(function() {
   // Enable - disable the "submit" button in accord with the length of the url field's content
   $('input#url').bind('keydown keyup', enableOrDisableSubmit);
@@ -148,5 +178,11 @@ $(document).ready(function() {
   });
 
   // Enable sorting for the table
-  $('table#links').tablesorter();
+  $('table#links').tablesorter({
+    headers: {
+      2: {
+        sorter: 'timestamp'
+      }
+    }
+  });
 });
