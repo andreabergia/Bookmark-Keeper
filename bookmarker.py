@@ -63,7 +63,7 @@ class Links(webapp2.RequestHandler):
         urls = model.getLinks(user)
         template_values = {'urls' : urls}
 
-        path = os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'list.html')
+        path = os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'links.html')
         self.response.out.write(template.render(path, template_values))
 
 
