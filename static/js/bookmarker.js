@@ -183,6 +183,7 @@ $(document).ready(function() {
       2: {
         sorter: 'timestamp'
       }
-    }
+    },
+    sortList: [[2, 0]]
   });
 });
