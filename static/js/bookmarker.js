@@ -43,6 +43,7 @@ function closeRow(elemId) {
     success: function(data) {
       showInfo('Link <a target="blank" href="' + link + '">' + link + '</a> successfully removed.');
       tr.remove();
+      $('table#links').trigger('update');
     },
     error: function(xhr, textStatus, errorThrown) {
       showError('Could not remove the link! Please try again later.');
@@ -50,11 +51,12 @@ function closeRow(elemId) {
   });
 }
 
-// Append a row to the table (TODO: performances!)
+// Append a row to the table
 function appendRow(link, elemId, dateInsert) {
   var rowId = 'row' + elemId;
 
-  $('table#links').find('tbody').append(
+  var $table = $('table#links');
+  $table.find('tbody').prepend(
     $('<tr>').attr('id', rowId).append(
       $('<td>').append(
         $('<a>')
@@ -75,6 +77,7 @@ function appendRow(link, elemId, dateInsert) {
         $('<td>').text(dateInsert)
       )
     );
+    $table.trigger('update');
 }
 
 function enableOrDisableSubmit() {
@@ -130,7 +133,7 @@ $(document).ready(function() {
           return;
         }
 
-        appendRow(linkUrl, result['id'], 'Now')
+        appendRow(linkUrl, result['id'], 'Now');
 
         $url.val('');
         $url.removeAttr('disabled');
@@ -143,4 +146,7 @@ $(document).ready(function() {
       }
     });
   });
+
+  // Enable sorting for the table
+  $('table#links').tablesorter();
 });

@@ -69,6 +69,13 @@
         <div class="span16">
           <h2>Your links</h2>
           <table id="links" class="zebra-striped condensed-table">
+            <thead>
+              <tr>
+                <th class="header"></th>
+                <th>Link</th>
+                <th>Since</th>
+              </tr>
+            </thead>
             <tbody>
             {% for row in urls %}
             <tr id="row{{row.id}}">
@@ -89,6 +96,7 @@
     </div> <!-- /container -->
 
     <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="/js/bookmarker.js"></script>
   </body>
 </html>
