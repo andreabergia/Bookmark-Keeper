@@ -74,7 +74,7 @@
             <tr id="row{{row.id}}">
                 <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
                 <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
-                <td>{{ row.dateInsert }}</td>
+                <td>{{ row.dateInsert|formatDateDistance }}</td>
             </tr>
             {% endfor %}
             </tbody>

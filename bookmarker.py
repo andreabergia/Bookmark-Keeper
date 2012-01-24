@@ -3,6 +3,7 @@ import json
 import logging
 import datetime
 import os
+from common.templatefilters import formatDateDistance
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -26,12 +27,9 @@ def get_memcache_key(user):
 
 def toJson(object):
     class JsonEncoder(json.JSONEncoder):
-        monthNames = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
-
         def default(self, obj):
             if isinstance(obj, datetime.datetime):
-                # TODO: need to handle timezones here!!
-                return "%d:%d - %d %s %d" % (obj.hour, obj.minute, obj.day, self.monthNames[obj.month], obj.year)
+                return formatDateDistance(obj)
             return json.JSONEncoder.default(self, obj)
     return json.dumps(object, cls=JsonEncoder)
 
@@ -128,6 +126,7 @@ class Links(webapp2.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
+template.register_template_library('common.templatefilters')
 app = webapp2.WSGIApplication([
     ('/list/', List),
     ('/add/', Add),
