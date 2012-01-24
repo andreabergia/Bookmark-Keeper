@@ -70,6 +70,13 @@
           <h2>Your links</h2>
           <table id="links" class="zebra-striped condensed-table">
             <tbody>
+            {% for row in urls %}
+            <tr id="row{{row.id}}">
+                <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
+                <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
+                <td>{{ row.dateInsert }}</td>
+            </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>

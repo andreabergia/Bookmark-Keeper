@@ -2,10 +2,12 @@ import webapp2
 import json
 import logging
 import datetime
+import os
 
 from google.appengine.ext import db
 from google.appengine.api import users
 from google.appengine.api import memcache
+from google.appengine.ext.webapp import template
 
 
 class Link(db.Model):
@@ -35,9 +37,7 @@ def toJson(object):
 
 
 class List(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'application/json'
-
+    def getLinks(self):
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 
@@ -55,6 +55,12 @@ class List(webapp2.RequestHandler):
             if not memcache.add(get_memcache_key(user), urls, 360):
                 logging.error('Memcache set failed!')
 
+        return urls
+
+    def get(self):
+        urls = self.getLinks()
+
+        self.response.headers['Content-Type'] = 'application/json'
         respJSON = toJson(urls)
         self.response.out.write(respJSON)
 
@@ -111,7 +117,23 @@ class Remove(webapp2.RequestHandler):
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write('{"ok" : false}')
 
-app = webapp2.WSGIApplication([('/list/', List), ('/add/', Add), ('/remove/', Remove)], debug=True)
+class Links(webapp2.RequestHandler):
+    def get(self):
+        l = List()
+        urls = l.getLinks()
+
+        template_values = {'urls' : urls}
+
+        path = os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'list.html')
+        self.response.out.write(template.render(path, template_values))
+
+
+app = webapp2.WSGIApplication([
+    ('/list/', List),
+    ('/add/', Add),
+    ('/remove/', Remove),
+    ('/links/', Links),
+    ], debug=True)
 
 def main():
     run_wsgi_app(application)

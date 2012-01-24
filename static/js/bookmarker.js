@@ -30,6 +30,26 @@ function getDisplayLink(link) {
   }
 }
 
+function closeRow(elemId) {
+  var rowId = 'row' + elemId;
+  var tr = $('tr#' + rowId);
+  var link = $('tr#' + rowId + ' a:last').attr('href');
+  $.ajax({
+    type : 'POST',
+    url : '/remove/',
+    dataType : 'json',
+    data : { id: elemId },
+    // TODO: id
+    success: function(data) {
+      showInfo('Link <a target="blank" href="' + link + '">' + link + '</a> successfully removed.');
+      tr.remove();
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      showError('Could not remove the link! Please try again later.');
+    }
+  });
+}
+
 // Append a row to the table (TODO: performances!)
 function appendRow(link, elemId, dateInsert) {
   var rowId = 'row' + elemId;
@@ -42,22 +62,7 @@ function appendRow(link, elemId, dateInsert) {
           .attr('href', '#')
           .text('×')
         ).click(function(event) {
-          var tr = $('tr#' + rowId);
-          var link = $('tr#' + rowId + ' a:last').attr('href');
-          $.ajax({
-            type : 'POST',
-            url : '/remove/',
-            dataType : 'json',
-            data : { id: elemId },
-            // TODO: id
-            success: function(data) {
-              showInfo('Link <a target="blank" href="' + link + '">' + link + '</a> successfully removed.');
-              tr.remove();
-            },
-            error: function(xhr, textStatus, errorThrown) {
-              showError('Could not remove the link! Please try again later.');
-            }
-          })
+            closeRow(elemId);
         })
       ).append(
         $('<td>').append(
@@ -87,20 +92,6 @@ function enableOrDisableSubmit() {
 }
 
 $(document).ready(function() {
-  // Parse starting URLs
-  $.ajax({
-    type : 'GET',
-    url : '/list/',
-    cache : false,
-    dataType : 'json',
-    success : function(links) {
-      $.each(links, function(index) {
-        var link = links[index];
-        appendRow(link['url'], link['id'], link['dateInsert']);
-      })
-    }
-  });
-
   // Enable - disable the "submit" button in accord with the length of the url field's content
   $('input#url').bind('keydown keyup', enableOrDisableSubmit);
 
