@@ -94,7 +94,7 @@ function enableOrDisableSubmit() {
     }
 }
 
-// Add table sorting parser
+// Add table sorting parser. (TODO: is there no better solution than encoding back and forth?)
 $.tablesorter.addParser({
   id: 'timestamp', // Set a unique id
   is: function(s) { // Return false so this parser is not auto detected
