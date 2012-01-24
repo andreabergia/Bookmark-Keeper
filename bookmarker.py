@@ -69,7 +69,7 @@ class Links(webapp2.RequestHandler):
 
 template.register_template_library('common.templatefilters')
 app = webapp2.WSGIApplication([
-    ('/list/', List),
+    ('/api/list/', List),
     ('/add/', Add),
     ('/remove/', Remove),
     ('/links/', Links),
