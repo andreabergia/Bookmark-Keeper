@@ -21,7 +21,6 @@ def toJson(object):
 
 class List(webapp2.RequestHandler):
     def get(self):
-
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 

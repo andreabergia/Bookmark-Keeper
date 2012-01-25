@@ -52,7 +52,7 @@ def addLinkForUser(user, url):
     memcache_key = get_memcache_key(user)
     urls = memcache.get(memcache_key)
     if urls is not None:
-        urls.append(dbLinkToStoredObject(link))
+        urls.insert(0, dbLinkToStoredObject(link))
         if not memcache.replace(memcache_key, urls, 360):
             logging.error('Memcache set failed!')
             memcache.delete(memcache_key)
