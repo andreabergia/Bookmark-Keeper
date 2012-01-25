@@ -124,6 +124,49 @@ $.tablesorter.addParser({
 });
 
 
+function submitAddLink() {
+  var $url = $('#url');
+  var linkUrl = $url.val();
+  var $keywords = $('#keywords');
+  var keywordsValue = $keywords.val();
+
+  if (linkUrl.length === 0) {
+    showError('Please enter a link!');
+    return;
+  }
+
+  if (linkUrl.substr(0, 7) != 'http://' && linkUrl.substr(0, 8) != 'https://') {
+    linkUrl = 'http://' + linkUrl;
+  }
+
+  $url.attr('disabled');
+
+  $.ajax({
+    type : 'POST',
+    url : '/add/',
+    cache : false,
+    data : { url: linkUrl, keywords: keywordsValue },
+    dataType: 'json',
+    success: function(result) {
+      if (! result['ok']) {
+        showError('Could not add the link! Please try again later');
+        return;
+      }
+
+      appendRow(linkUrl, result['id'], 'Now');
+
+      $url.val('');
+      $url.removeAttr('disabled');
+      enableOrDisableSubmit();
+
+      showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      showError('Could not add the link! Please try again later');
+    }
+  });
+}
+
 $(document).ready(function() {
   // Enable - disable the "submit" button in accord with the length of the url field's content
   $('input#url').bind('keydown keyup', enableOrDisableSubmit);
@@ -134,47 +177,8 @@ $(document).ready(function() {
   });
 
   // Form submit action
-  $('form').submit(function(event) {
-    event.preventDefault();
-
-    $url = $('#url');
-    var linkUrl = $url.val();
-
-    if (linkUrl.length === 0) {
-      showError('Please enter a link!');
-      return;
-    }
-
-    if (linkUrl.substr(0, 7) != 'http://' && linkUrl.substr(0, 8) != 'https://') {
-      linkUrl = 'http://' + linkUrl;
-    }
-
-    $url.attr('disabled');
-
-    $.ajax({
-      type : 'POST',
-      url : '/add/',
-      cache : false,
-      data : { url: linkUrl },
-      dataType: 'json',
-      success: function(result) {
-        if (! result['ok']) {
-          showError('Could not add the link! Please try again later');
-          return;
-        }
-
-        appendRow(linkUrl, result['id'], 'Now');
-
-        $url.val('');
-        $url.removeAttr('disabled');
-        enableOrDisableSubmit();
-
-        showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
-      },
-      error: function(xhr, textStatus, errorThrown) {
-        showError('Could not add the link! Please try again later');
-      }
-    });
+  $('button#submit').click(function(event) {
+    submitAddLink();
   });
 
   // Enable sorting for the table
@@ -186,4 +190,14 @@ $(document).ready(function() {
     },
     sortList: [[2, 0]]
   });
+
+  // Enable modal button
+  $('a#buttonInsert').click(function(event) {
+    $('#insertModal').modal({
+      keyboard: true
+    })
+  });
+
+  // Enable tags selection
+  $(".chzn-select").chosen();
 });
