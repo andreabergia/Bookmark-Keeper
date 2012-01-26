@@ -14,3 +14,7 @@ body {
 .hero-unit a {
   text-decoration: none;
 }
+
+.icon {
+  background-image: url('/images/glyphicons-halflings-sprite.png');
+}

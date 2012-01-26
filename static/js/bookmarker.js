@@ -135,6 +135,7 @@ function submitAddLink() {
   var $keywords = $('#keywords');
   var keywordsValue = $keywords.val();
 
+  // TODO
   if (linkUrl.length === 0) {
     showError('Please enter a link!');
     return;
@@ -144,8 +145,7 @@ function submitAddLink() {
     linkUrl = 'http://' + linkUrl;
   }
 
-  $url.attr('disabled');
-  $keywords.attr('disabled');
+  $('#insertModal').modal('hide');
 
   $.ajax({
     type : 'POST',
@@ -163,8 +163,6 @@ function submitAddLink() {
 
       $url.val('');
       $keywords.val('');
-      $url.removeAttr('disabled');
-      $keywords.removeAttr('disabled');
       enableOrDisableSubmit();
 
       showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
