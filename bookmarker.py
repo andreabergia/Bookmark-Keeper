@@ -37,7 +37,7 @@ class Add(webapp2.RequestHandler):
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 
-        keywords = self.request.get('keywords').split('\x00')
+        keywords = self.request.get('keywords').split(' ')
         link = model.addLinkForUser(user, self.request.get('url'), keywords)
 
         respJSON = toJson( {'ok': True, 'id': str(link.key())} )
