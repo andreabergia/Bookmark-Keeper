@@ -128,7 +128,7 @@ function submitAddLink() {
   var $url = $('#url');
   var linkUrl = $url.val();
   var $keywords = $('#keywords');
-  var keywordsValue = $keywords.val();
+  var keywordsValue = $keywords.val().join('\u0000');
 
   if (linkUrl.length === 0) {
     showError('Please enter a link!');
@@ -178,10 +178,13 @@ $(document).ready(function() {
 
   // Form submit action
   $('button#submit').click(function(event) {
+    event.preventDefault();
     submitAddLink();
   });
 
   // Enable sorting for the table
+  // TODO: check for not empty
+  /*
   $('table#links').tablesorter({
     headers: {
       2: {
@@ -190,6 +193,7 @@ $(document).ready(function() {
     },
     sortList: [[2, 0]]
   });
+  */
 
   // Enable modal button
   $('a#buttonInsert').click(function(event) {

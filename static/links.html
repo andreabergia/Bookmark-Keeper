@@ -334,6 +334,7 @@
                 <th class="header"></th>
                 <th>Link</th>
                 <th>Since</th>
+                <th>Keywords</th>
               </tr>
             </thead>
             <tbody>
@@ -342,6 +343,9 @@
                 <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
                 <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
                 <td>{{ row.dateInsert|formatDateDistance }}</td>
+                <td>{% for keyword in row.keywords %}
+                        {{ keyword }}
+                    {% endfor %}</td>
             </tr>
             {% endfor %}
             </tbody>

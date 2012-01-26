@@ -15,3 +15,9 @@ indexes:
   - name: user
   - name: dateInsert
     direction: desc
+
+- kind: Link
+  ancestor: yes
+  properties:
+  - name: dateInsert
+    direction: desc
