@@ -13,6 +13,7 @@
 
     <!-- Le styles -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
@@ -23,9 +24,9 @@
   </head>
 
   <body>
-    <div class="topbar">
-      <div class="fill">
-        <div class="container">
+    <div class="navbar navbar-fixed">
+      <div class="navbar-inner">
+        <div class="fluid-container">
           <a class="brand" href="/">Bookmarker</a>
           <ul class="nav">
             <li><a href="/">Home</a></li>
@@ -37,89 +38,105 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="fluid-container">
+      <div class="fluid-content">
 
-      <!-- <div id="insertModal" class="modal hide fade"> -->
-      <div id="insertModal" class="">
-        <form id="addlink">
-        <div class="modal-header">
-          <a href="#" class="close">×</a>
-          <h3>Insert a new bookmark</h3>
-        </div>
-        <div class="modal-body">
-            <fieldset>
-              <div class="clearfix">
-                <label for="url">Enter an url:</label>
-                <div class="input">
-                  <input size="80" id="url" type="text" class="span10">
+        <!-- <div id="insertModal" class="modal hide fade"> -->
+        <div id="insertModal" class="modal hide fade" style="display: none;">
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Insert a new bookmark</h3>
+          </div>
+          <form id="addlink" class="form-vertical" style="margin-bottom: 0px;">
+            <div class="modal-body">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="url">Enter an url:</label>
+                  <div class="controls">
+                    <input class="input-xxlarge focused" id="url" type="text" value="">
+                  </div>
                 </div>
-              </div>
 
-              <div class="clearfix">
-                <label for="keywords">Enter keywords:</label>
-                <div class="input">
-                  <input size="80" id="keywords" type="text" class="span10">
+                <div class="control-group">
+                  <label class="control-label" for="keywords">Enter keywords:</label>
+                  <div class="controls">
+                    <input class="input-xxlarge focused" id="keywords" type="text" value="">
+                  </div>
                 </div>
-              </div>
-            </fieldset>
+              </fieldset>
+            </div>
+            <div class="modal-footer">
+              <button class="btn primary  disabled" type="submit" disabled id="submit">Insert Link</button>
+              <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            </div>
+          </form>
         </div>
-        <div class="modal-footer">
-          <button class="btn primary  disabled" type="submit" disabled id="submit">Insert Link</button>
-          <a href="#" class="btn secondary">Cancel</a>
+
+        <!-- TODO -->
+        <a class="btn" data-toggle="modal" href="#insertModal" >Insert new link</a>
+
+        <div class="row">
+          <div class="span12">
+            <form class="well form-search form-horizontal form-inline">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="search">Quick search:</label>
+                  <div class="controls">
+                    <input type="text" class="input-medium search-query" id="search">
+                  </div>
+                </div>
+              <fieldset>
+            </form>
+          </div>
         </div>
-        </form>
-      </div>
 
-      <!-- TODO -->
-      <a class="btn" id="buttonInsert">Launch Modal</a>
+        <!-- Error message -->
+        <div class="row">
+          <div class="span12" id="alertContainer">
+          </div>
+        </div>
 
-      <!-- TODO -->
-      <input id="search" type="search">
-
-      <!-- Error message -->
-      <div class="alert-message error hidden" id="errorMessage">
-        <a class="close" href="#">&times;</a>
-        <p></p>
-      </div>
-
-      <!-- Links -->
-      <div class="row">
-        <div class="span16">
-          <h2>Your links</h2>
-          <table id="links" class="zebra-striped condensed-table">
-            <thead>
-              <tr>
-                <th class="header"></th>
-                <th>Link</th>
-                <th>Since</th>
-                <th>Keywords</th>
+        <!-- Links -->
+        <div class="row">
+          <div class="span16">
+            <h2>Your links</h2>
+            <table id="links" class="table table-striped">
+              <thead>
+                <tr>
+                  <th class="header"></th>
+                  <th>Link</th>
+                  <th>Since</th>
+                  <th>Keywords</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for row in urls %}
+              <tr id="row{{row.id}}">
+                  <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
+                  <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
+                  <td>{{ row.dateInsert|formatDateDistance }}</td>
+                  <td>{% for keyword in row.keywords %}
+                          {{ keyword }}
+                      {% endfor %}</td>
               </tr>
-            </thead>
-            <tbody>
-            {% for row in urls %}
-            <tr id="row{{row.id}}">
-                <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
-                <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
-                <td>{{ row.dateInsert|formatDateDistance }}</td>
-                <td>{% for keyword in row.keywords %}
-                        {{ keyword }}
-                    {% endfor %}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <footer>
+          <p>&copy; 2012 <a href="mailto:andreabergia@gmail.com">Andrea Bergia</a></p>
+        </footer>
+
       </div>
-
-      <footer>
-        <p>&copy; 2012 <a href="mailto:andreabergia@gmail.com">Andrea Bergia</a></p>
-      </footer>
-
     </div> <!-- /container -->
 
     <script type="text/javascript" src="/js/jquery.js"></script>
-    <script type="text/javascript" src="/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-transition.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-alert.js"></script>
     <script type="text/javascript" src="/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="/js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="/js/bookmarker.js"></script>
   </body>
 </html>

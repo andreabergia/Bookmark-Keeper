@@ -13,6 +13,7 @@
 
     <!-- Le styles -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
@@ -23,9 +24,9 @@
   </head>
 
   <body>
-    <div class="topbar">
-      <div class="fill">
-        <div class="container">
+    <div class="navbar navbar-fixed">
+      <div class="navbar-inner">
+        <div class="fluid-container">
           <a class="brand" href="/">Bookmarker</a>
           <ul class="nav">
             <li class="active"><a href="/">Home</a></li>
@@ -37,32 +38,36 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="fluid-container">
+      <div class="fluid-content">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <a href="/links/">
-          <img src="images/icon.png" style="float: left;" height="55" width="55">
-          <h1>Bookmarker!</h1>
-        </a>
-        <p>Save your bookmarks, tag them, search them.</p>
-        <a href="/links/" style="float: right; position: relative; top: -68px;" class="btn large primary" type="submit">Go to my List</a>
-      </div>
-
-      <div class="row">
-        <div class="span-one-third">
-          <h2>What is BookMarker?</h2>
-          <p>BookMarker is a simple web application, that allows you to store your bookmarks, tag them and search through them.</p>
+        <div class="hero-unit">
+          <a href="/links/">
+            <img src="images/icon.png" style="float: left;" height="55" width="55">
+            <h1>Bookmarker!</h1>
+          </a>
+          <p>Save your bookmarks, tag them, search them.</p>
+          <a href="/links/" style="float: right; position: relative; top: -68px;" class="btn large primary" type="submit">Go to my List</a>
         </div>
 
-        <div class="span-one-third">
-          <h2>How does it work?</h2>
-          <p>Simply go to your <a href="/links/">List</a> to see your current bookmarks!</p>
-        </div>
+        <hr>
 
-        <div class="span-one-third">
-          <h2>How much does it cost?</h2>
-          <p>At the moment, Bookmarker is free to use.</p>
+        <div class="row">
+          <div class="span4">
+            <h2>What is BookMarker?</h2>
+            <p>BookMarker is a simple web application, that allows you to store your bookmarks, tag them and search through them.</p>
+          </div>
+
+          <div class="span4">
+            <h2>How does it work?</h2>
+            <p>Simply go to your <a href="/links/">List</a> to see your current bookmarks!</p>
+          </div>
+
+          <div class="span4">
+            <h2>How much does it cost?</h2>
+            <p>At the moment, Bookmarker is free to use.</p>
+          </div>
         </div>
       </div>
 
