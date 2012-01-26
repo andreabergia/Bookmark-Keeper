@@ -52,7 +52,7 @@ function closeRow(elemId) {
 }
 
 // Append a row to the table
-function appendRow(link, elemId, dateInsert) {
+function appendRow(link, elemId, dateInsert, keywords) {
   var rowId = 'row' + elemId;
 
   var $table = $('table#links');
@@ -75,6 +75,8 @@ function appendRow(link, elemId, dateInsert) {
         )
       ).append(
         $('<td>').text(dateInsert)
+      ).append(
+        $('<td>').text(keywords)
       )
     );
     $table.trigger('update');
@@ -128,7 +130,7 @@ function submitAddLink() {
   var $url = $('#url');
   var linkUrl = $url.val();
   var $keywords = $('#keywords');
-  var keywordsValue = $keywords.val().join('\u0000');
+  var keywordsValue = $keywords.val();
 
   if (linkUrl.length === 0) {
     showError('Please enter a link!');
@@ -140,6 +142,7 @@ function submitAddLink() {
   }
 
   $url.attr('disabled');
+  $keywords.attr('disabled');
 
   $.ajax({
     type : 'POST',
@@ -153,10 +156,12 @@ function submitAddLink() {
         return;
       }
 
-      appendRow(linkUrl, result['id'], 'Now');
+      appendRow(linkUrl, result['id'], 'Now', keywordsValue);
 
       $url.val('');
+      $keywords.val('');
       $url.removeAttr('disabled');
+      $keywords.removeAttr('disabled');
       enableOrDisableSubmit();
 
       showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
@@ -184,16 +189,16 @@ $(document).ready(function() {
 
   // Enable sorting for the table
   // TODO: check for not empty
-  /*
-  $('table#links').tablesorter({
-    headers: {
-      2: {
-        sorter: 'timestamp'
-      }
-    },
-    sortList: [[2, 0]]
-  });
-  */
+  if ($('table#links > tbody > td')) {
+    $('table#links').tablesorter({
+      headers: {
+        2: {
+          sorter: 'timestamp'
+        }
+      },
+      sortList: [[2, 0]]
+    });
+  }
 
   // Enable modal button
   $('a#buttonInsert').click(function(event) {
@@ -201,7 +206,4 @@ $(document).ready(function() {
       keyboard: true
     })
   });
-
-  // Enable tags selection
-  $(".chzn-select").chosen();
 });
