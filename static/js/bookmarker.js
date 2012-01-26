@@ -1,23 +1,26 @@
+function showAlert(message, type) {
+  $('div#alertContainer').append(
+    $('<div>')
+      .attr('class', 'alert alert-block alert-' + type + ' fade in')
+      .append(
+        $('<a>')
+          .attr('class', 'close')
+          .attr('data-dismiss', 'alert')
+          .attr('href', '#')
+          .html('&times;')
+        )
+        .append(
+          $('<p>').html(message)
+        )
+  );
+}
+
 function showError(errorMessage) {
-  $('#errorMessage').removeClass('hidden');
-  $('#errorMessage p').html(errorMessage);
+  showAlert(errorMessage, 'error');
 }
 
 function showInfo(message) {
-  var infoDiv = $('<div>')
-                  .attr('class', 'alert-message success');
-  infoDiv.append($('<a>')
-                    .attr('class', 'close')
-                    .attr('href', '#')
-                    .text('×')
-                    .click(function(event) {
-                      infoDiv.remove();
-                    })
-                  );
-  infoDiv.append($('<p>')
-                    .html(message)
-                  );
-  infoDiv.insertBefore($('div.row'));
+  showAlert(message, 'success');
 }
 
 function getDisplayLink(link) {
@@ -62,7 +65,8 @@ function appendRow(link, elemId, dateInsert, keywords) {
         $('<a>')
           .attr('class', 'btn small danger')
           .attr('href', '#')
-          .text('×')
+          .attr('style', 'padding: 0px 2px 2px 2px;')
+          .html('<i class="icon minus"></i>')
         ).click(function(event) {
             closeRow(elemId);
         })
@@ -132,6 +136,7 @@ function submitAddLink() {
   var $keywords = $('#keywords');
   var keywordsValue = $keywords.val();
 
+  // TODO
   if (linkUrl.length === 0) {
     showError('Please enter a link!');
     return;
@@ -141,8 +146,7 @@ function submitAddLink() {
     linkUrl = 'http://' + linkUrl;
   }
 
-  $url.attr('disabled');
-  $keywords.attr('disabled');
+  $('#insertModal').modal('hide');
 
   $.ajax({
     type : 'POST',
@@ -160,8 +164,6 @@ function submitAddLink() {
 
       $url.val('');
       $keywords.val('');
-      $url.removeAttr('disabled');
-      $keywords.removeAttr('disabled');
       enableOrDisableSubmit();
 
       showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
@@ -208,16 +210,6 @@ $(document).ready(function() {
     });
   // }
 
-  // Enable modal button
-  $('a#buttonInsert').click(function(event) {
-    $('#insertModal').modal({
-      keyboard: true
-    })
-  });
-
   // Enable search field
-  var $search = $('input#search');
-  $search.bind('keyup', function(event) {
-    
-  });
+  $('input#search').quicksearch('table#links tbody tr');
 });
