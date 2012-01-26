@@ -174,7 +174,9 @@ function submitAddLink() {
 
 $(document).ready(function() {
   // Enable - disable the "submit" button in accord with the length of the url field's content
-  $('input#url').bind('keydown keyup', enableOrDisableSubmit);
+  $('input#url').bind('keydown keyup', function(event) {
+    enableOrDisableSubmit();
+  });
 
   // Setup error message
   $('#errorMessage .close').click(function(event) {
@@ -186,24 +188,36 @@ $(document).ready(function() {
     event.preventDefault();
     submitAddLink();
   });
+  $('form#addlink').submit(function(event) {
+    event.preventDefault();
+    submitAddLink();
+  });
 
   // Enable sorting for the table
-  // TODO: check for not empty
-  if ($('table#links > tbody > td')) {
+  // if ($('table#links > tbody > td')) {
     $('table#links').tablesorter({
       headers: {
         2: {
           sorter: 'timestamp'
+        },
+        3: {
+          sorter: false
         }
       },
       sortList: [[2, 0]]
     });
-  }
+  // }
 
   // Enable modal button
   $('a#buttonInsert').click(function(event) {
     $('#insertModal').modal({
       keyboard: true
     })
+  });
+
+  // Enable search field
+  var $search = $('input#search');
+  $search.bind('keyup', function(event) {
+    
   });
 });
