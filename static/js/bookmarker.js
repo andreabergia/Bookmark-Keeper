@@ -52,7 +52,7 @@ function closeRow(elemId) {
 }
 
 // Append a row to the table
-function appendRow(link, elemId, dateInsert) {
+function appendRow(link, elemId, dateInsert, keywords) {
   var rowId = 'row' + elemId;
 
   var $table = $('table#links');
@@ -75,6 +75,8 @@ function appendRow(link, elemId, dateInsert) {
         )
       ).append(
         $('<td>').text(dateInsert)
+      ).append(
+        $('<td>').text(keywords)
       )
     );
     $table.trigger('update');
@@ -124,9 +126,57 @@ $.tablesorter.addParser({
 });
 
 
+function submitAddLink() {
+  var $url = $('#url');
+  var linkUrl = $url.val();
+  var $keywords = $('#keywords');
+  var keywordsValue = $keywords.val();
+
+  if (linkUrl.length === 0) {
+    showError('Please enter a link!');
+    return;
+  }
+
+  if (linkUrl.substr(0, 7) != 'http://' && linkUrl.substr(0, 8) != 'https://') {
+    linkUrl = 'http://' + linkUrl;
+  }
+
+  $url.attr('disabled');
+  $keywords.attr('disabled');
+
+  $.ajax({
+    type : 'POST',
+    url : '/add/',
+    cache : false,
+    data : { url: linkUrl, keywords: keywordsValue },
+    dataType: 'json',
+    success: function(result) {
+      if (! result['ok']) {
+        showError('Could not add the link! Please try again later');
+        return;
+      }
+
+      appendRow(linkUrl, result['id'], 'Now', keywordsValue);
+
+      $url.val('');
+      $keywords.val('');
+      $url.removeAttr('disabled');
+      $keywords.removeAttr('disabled');
+      enableOrDisableSubmit();
+
+      showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      showError('Could not add the link! Please try again later');
+    }
+  });
+}
+
 $(document).ready(function() {
   // Enable - disable the "submit" button in accord with the length of the url field's content
-  $('input#url').bind('keydown keyup', enableOrDisableSubmit);
+  $('input#url').bind('keydown keyup', function(event) {
+    enableOrDisableSubmit();
+  });
 
   // Setup error message
   $('#errorMessage .close').click(function(event) {
@@ -134,56 +184,40 @@ $(document).ready(function() {
   });
 
   // Form submit action
-  $('form').submit(function(event) {
+  $('button#submit').click(function(event) {
     event.preventDefault();
-
-    $url = $('#url');
-    var linkUrl = $url.val();
-
-    if (linkUrl.length === 0) {
-      showError('Please enter a link!');
-      return;
-    }
-
-    if (linkUrl.substr(0, 7) != 'http://' && linkUrl.substr(0, 8) != 'https://') {
-      linkUrl = 'http://' + linkUrl;
-    }
-
-    $url.attr('disabled');
-
-    $.ajax({
-      type : 'POST',
-      url : '/add/',
-      cache : false,
-      data : { url: linkUrl },
-      dataType: 'json',
-      success: function(result) {
-        if (! result['ok']) {
-          showError('Could not add the link! Please try again later');
-          return;
-        }
-
-        appendRow(linkUrl, result['id'], 'Now');
-
-        $url.val('');
-        $url.removeAttr('disabled');
-        enableOrDisableSubmit();
-
-        showInfo('Link <a target="blank" href="' + linkUrl + '">' + getDisplayLink(linkUrl) + '</a> succesfully added.');
-      },
-      error: function(xhr, textStatus, errorThrown) {
-        showError('Could not add the link! Please try again later');
-      }
-    });
+    submitAddLink();
+  });
+  $('form#addlink').submit(function(event) {
+    event.preventDefault();
+    submitAddLink();
   });
 
   // Enable sorting for the table
-  $('table#links').tablesorter({
-    headers: {
-      2: {
-        sorter: 'timestamp'
-      }
-    },
-    sortList: [[2, 0]]
+  // if ($('table#links > tbody > td')) {
+    $('table#links').tablesorter({
+      headers: {
+        2: {
+          sorter: 'timestamp'
+        },
+        3: {
+          sorter: false
+        }
+      },
+      sortList: [[2, 0]]
+    });
+  // }
+
+  // Enable modal button
+  $('a#buttonInsert').click(function(event) {
+    $('#insertModal').modal({
+      keyboard: true
+    })
+  });
+
+  // Enable search field
+  var $search = $('input#search');
+  $search.bind('keyup', function(event) {
+    
   });
 });

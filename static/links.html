@@ -39,24 +39,42 @@
 
     <div class="container">
 
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <a href="/links/">
-          <img src="/images/icon.png" style="float: left;" height="55">
-          <h1>Bookmarker!</h1>
-        </a>
-        <p>Bookmarker is a simple web application for storing bookmarks and links to read later.</p>
+      <!-- <div id="insertModal" class="modal hide fade"> -->
+      <div id="insertModal" class="">
+        <form id="addlink">
+        <div class="modal-header">
+          <a href="#" class="close">×</a>
+          <h3>Insert a new bookmark</h3>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+              <div class="clearfix">
+                <label for="url">Enter an url:</label>
+                <div class="input">
+                  <input size="80" id="url" type="text" class="span10">
+                </div>
+              </div>
 
-        <form>
-          <fieldset>
-            <div class="clearfix">
-              Enter an url:
-              <input size="80" id="url" type="text" class="span10">
-              <button class="btn primary disabled" type="submit" disabled id="submit">Save</button>
-            </div>
-          </fieldset>
+              <div class="clearfix">
+                <label for="keywords">Enter keywords:</label>
+                <div class="input">
+                  <input size="80" id="keywords" type="text" class="span10">
+                </div>
+              </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button class="btn primary  disabled" type="submit" disabled id="submit">Insert Link</button>
+          <a href="#" class="btn secondary">Cancel</a>
+        </div>
         </form>
       </div>
+
+      <!-- TODO -->
+      <a class="btn" id="buttonInsert">Launch Modal</a>
+
+      <!-- TODO -->
+      <input id="search" type="search">
 
       <!-- Error message -->
       <div class="alert-message error hidden" id="errorMessage">
@@ -74,6 +92,7 @@
                 <th class="header"></th>
                 <th>Link</th>
                 <th>Since</th>
+                <th>Keywords</th>
               </tr>
             </thead>
             <tbody>
@@ -82,6 +101,9 @@
                 <td><a class="btn small danger" href="#" onClick="closeRow('{{row.id}}')">×</a></td>
                 <td><a href="{{row.url}}" target="_blank">{{ row.url }}</a></td>
                 <td>{{ row.dateInsert|formatDateDistance }}</td>
+                <td>{% for keyword in row.keywords %}
+                        {{ keyword }}
+                    {% endfor %}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -97,6 +119,7 @@
 
     <script type="text/javascript" src="/js/jquery.js"></script>
     <script type="text/javascript" src="/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/js/bookmarker.js"></script>
   </body>
 </html>

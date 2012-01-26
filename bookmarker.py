@@ -1,4 +1,5 @@
 import model
+import logging
 
 import webapp2
 import json
@@ -21,7 +22,6 @@ def toJson(object):
 
 class List(webapp2.RequestHandler):
     def get(self):
-
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 
@@ -37,7 +37,8 @@ class Add(webapp2.RequestHandler):
         user = users.get_current_user()
         assert user is not None, 'no current user!'
 
-        link = model.addLinkForUser(user, self.request.get('url'))
+        keywords = self.request.get('keywords').split(' ')
+        link = model.addLinkForUser(user, self.request.get('url'), keywords)
 
         respJSON = toJson( {'ok': True, 'id': str(link.key())} )
         self.response.headers['Content-Type'] = 'application/json'
