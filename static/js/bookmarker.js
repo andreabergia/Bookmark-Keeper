@@ -65,7 +65,8 @@ function appendRow(link, elemId, dateInsert, keywords) {
         $('<a>')
           .attr('class', 'btn small danger')
           .attr('href', '#')
-          .text('×')
+          .attr('style', 'padding: 0px 2px 2px 2px;')
+          .html('<i class="icon minus"></i>')
         ).click(function(event) {
             closeRow(elemId);
         })
@@ -210,8 +211,5 @@ $(document).ready(function() {
   // }
 
   // Enable search field
-  var $search = $('input#search');
-  $search.bind('keyup', function(event) {
-
-  });
+  $('input#search').quicksearch('table#links tbody tr');
 });
